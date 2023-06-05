@@ -1,12 +1,11 @@
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Optional;
 
 public class Main {
 
@@ -19,17 +18,21 @@ public class Main {
                         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                         PrintWriter out = new PrintWriter(socket.getOutputStream());
                 ) {
-                    JSONArray jsonArray = new JSONArray();
                     String word = in.readLine();
                     BooleanSearchEngine booleanSearchEngine = new BooleanSearchEngine(file);
 
                     ArrayList<PageEntry> pages = (ArrayList<PageEntry>) booleanSearchEngine.search(word);
 
                     if (pages != null) {
+                        ArrayList<JSONObject> jsonObjects = new ArrayList<>();
                         for (int i = 0; i < pages.size(); ++i) {
-                            jsonArray.put(pages.get(i));
+                            JSONObject jsonObject = new JSONObject();
+                            jsonObject.put("pdfName", pages.get(i).getPdfName());
+                            jsonObject.put("page", pages.get(i).getPage());
+                            jsonObject.put("count", pages.get(i).getCount());
+                            jsonObjects.add(jsonObject);
                         }
-                        out.print(jsonArray);
+                        out.print(jsonObjects);
                     } else {
                         out.print(Collections.emptyList());
                     }

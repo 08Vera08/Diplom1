@@ -1,10 +1,14 @@
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class Client {
@@ -61,16 +65,21 @@ public class Client {
         Scanner scanner = new Scanner(System.in);
         String response = client.sendMessage(scanner.nextLine());
 
-        JSONArray jsonArray = new JSONArray(response);
-
-        if (!jsonArray.isEmpty()) {
-            System.out.println('[');
-            for (int i = 0; i < jsonArray.length(); ++i) {
-                System.out.print(jsonArray.get(i));
+        ArrayList<String> responses = new ArrayList<>(Arrays.asList(response.split(", ")));
+        responses.set(0, responses.get(0).replace("[", ""));
+        responses.set(responses.size() - 1, responses.get(0).replace("]", ""));
+        System.out.println(responses);
+        if (!responses.isEmpty()) {
+            ArrayList<JSONObject> jsonObjects = new ArrayList<>();
+            for (int i = 0; i < responses.size(); ++i) {
+                if (responses.get(i).isEmpty()) System.out.println(1);
+                JSONObject jsonObject = new JSONObject(responses.get(i));
+                jsonObjects.add(jsonObject);
             }
-            System.out.println(']');
+
+            System.out.println(jsonObjects);
         } else {
-            System.out.println("[]");
+            System.out.println(Collections.emptyList());
         }
 
     }
