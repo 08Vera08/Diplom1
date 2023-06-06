@@ -1,4 +1,3 @@
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -7,7 +6,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Scanner;
 
@@ -45,18 +43,22 @@ public class Client {
         return response;
     }
 
-    public void stopConnection() {
-        try {
-            in.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+    public ArrayList<String> getResponses(String response) {
+        char jsonResponse[] = response.toCharArray();
+        int n = jsonResponse.length, i = 0;
+        ArrayList<String> responses = new ArrayList<>();
+        while (i < n) {
+            if (jsonResponse[i] == '{') {
+                String buffer = "";
+                while (jsonResponse[i - 1] != '}') {
+                    buffer += jsonResponse[i];
+                    i++;
+                }
+                responses.add(buffer);
+            }
+            i++;
         }
-        out.close();
-        try {
-            clientSocket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return responses;
     }
 
     public static void main(String[] args) {
@@ -65,14 +67,11 @@ public class Client {
         Scanner scanner = new Scanner(System.in);
         String response = client.sendMessage(scanner.nextLine());
 
-        ArrayList<String> responses = new ArrayList<>(Arrays.asList(response.split(", ")));
-        responses.set(0, responses.get(0).replace("[", ""));
-        responses.set(responses.size() - 1, responses.get(0).replace("]", ""));
-        System.out.println(responses);
+        ArrayList<String> responses = client.getResponses(response);
+
         if (!responses.isEmpty()) {
             ArrayList<JSONObject> jsonObjects = new ArrayList<>();
             for (int i = 0; i < responses.size(); ++i) {
-                if (responses.get(i).isEmpty()) System.out.println(1);
                 JSONObject jsonObject = new JSONObject(responses.get(i));
                 jsonObjects.add(jsonObject);
             }
