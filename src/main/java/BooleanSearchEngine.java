@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.*;
 
 public class BooleanSearchEngine implements SearchEngine {
-    private HashMap<String, ArrayList<PageEntry>> keys;
+    private HashMap<String, List<PageEntry>> keys;
 
     BooleanSearchEngine() {
         keys = new HashMap<>();
@@ -47,7 +47,7 @@ public class BooleanSearchEngine implements SearchEngine {
                             keys.get(word).add(new PageEntry(files[i].getName(), j, freqs.get(word)));
                         }
                     } else {
-                        ArrayList<PageEntry> values = new ArrayList<>();
+                        List<PageEntry> values = new ArrayList<>();
                         values.add(new PageEntry(files[i].getName(), j, freqs.get(word)));
                         keys.put(word, values);
                     }

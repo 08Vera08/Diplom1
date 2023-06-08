@@ -6,6 +6,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class Main {
 
@@ -19,12 +20,13 @@ public class Main {
                         PrintWriter out = new PrintWriter(socket.getOutputStream());
                 ) {
                     String word = in.readLine();
+
                     BooleanSearchEngine booleanSearchEngine = new BooleanSearchEngine(file);
 
-                    ArrayList<PageEntry> pages = (ArrayList<PageEntry>) booleanSearchEngine.search(word);
+                    List<PageEntry> pages = booleanSearchEngine.search(word.toLowerCase());
 
                     if (pages != null) {
-                        ArrayList<JSONObject> jsonObjects = new ArrayList<>();
+                        List<JSONObject> jsonObjects = new ArrayList<>();
                         for (int i = 0; i < pages.size(); ++i) {
                             JSONObject jsonObject = new JSONObject();
                             jsonObject.put("pdfName", pages.get(i).getPdfName());

@@ -5,9 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Scanner;
+import java.util.*;
 
 public class Client {
     private Socket clientSocket;
@@ -43,10 +41,10 @@ public class Client {
         return response;
     }
 
-    public ArrayList<String> getResponses(String response) {
+    public List<String> getResponses(String response) {
         char jsonResponse[] = response.toCharArray();
         int n = jsonResponse.length, i = 0;
-        ArrayList<String> responses = new ArrayList<>();
+        List<String> responses = new ArrayList<>();
         while (i < n) {
             if (jsonResponse[i] == '{') {
                 String buffer = "";
@@ -67,10 +65,10 @@ public class Client {
         Scanner scanner = new Scanner(System.in);
         String response = client.sendMessage(scanner.nextLine());
 
-        ArrayList<String> responses = client.getResponses(response);
+        List<String> responses = client.getResponses(response);
 
         if (!responses.isEmpty()) {
-            ArrayList<JSONObject> jsonObjects = new ArrayList<>();
+            List<JSONObject> jsonObjects = new ArrayList<>();
             for (int i = 0; i < responses.size(); ++i) {
                 JSONObject jsonObject = new JSONObject(responses.get(i));
                 jsonObjects.add(jsonObject);
